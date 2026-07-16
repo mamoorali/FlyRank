@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.use(express.json());
 port = 3000;
 
 const tasks = [
@@ -51,6 +52,23 @@ app.get('/health', (req,res) =>
         "status": "ok"    
     });
 });
+
+app.post("/tasks", (req, res) => {
+    const { title } = req.body;
+    if (!title) {
+        return res.status(400).json({
+            error: "Title is required"
+        });
+    }
+    const newTask = {
+        id: tasks.length + 1,
+        title: title,
+        done: false
+    };
+    tasks.push(newTask);
+    res.status(201).json(newTask);
+});
+
 
 app.listen(port, () =>
 {
